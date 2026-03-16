@@ -77,7 +77,7 @@ export default function Login() {
             <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-lg">
                <Building2 className="w-8 h-8 text-blue-900" />
             </div>
-            <span className="text-2xl font-bold tracking-wider">VPA GROUP</span>
+            <span className="text-2xl font-bold tracking-wider">Construction Site</span>
           </div>
           <h1 className="text-4xl font-bold leading-tight mb-4">
             Professional Engineering <br/> & Supply Management
@@ -88,7 +88,7 @@ export default function Login() {
         </div>
 
         <div className="relative z-20 text-sm text-blue-300">
-          © 2024 V.P.A. ENGINEERING AND SUPPLY CO., LTD.
+          © 2025 ENGINEERING AND SUPPLY CO., LTD.
         </div>
       </div>
 

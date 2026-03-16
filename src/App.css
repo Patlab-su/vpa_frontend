@@ -3,6 +3,8 @@
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  /* ให้ดึงฟอนต์จากที่ตั้งไว้ใน :root ของ index.css */
+  font-family: inherit; 
 }
 
 .logo {
@@ -11,20 +13,18 @@
   will-change: filter;
   transition: filter 300ms;
 }
+
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
 }
+
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
 
 @keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -39,4 +39,9 @@
 
 .read-the-docs {
   color: #888;
+}
+
+/* เพิ่มส่วนนี้เพื่อความชัวร์ในหน้า Login */
+input, button, label, p, span {
+  font-family: inherit;
 }

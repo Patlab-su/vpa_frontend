@@ -165,7 +165,7 @@ const ExpenseSummary = () => {
       <div className="mx-auto max-w-screen-sm px-4 py-6 space-y-6">
         {/* Company Title */}
         <div className="text-center space-y-1">
-            <h2 className="text-lg font-black text-blue-900 leading-none">V.P.A. Engineering & Supply</h2>
+            <h2 className="text-lg font-black text-blue-900 leading-none">บริษัท รับเหมาก่อสร้าง</h2>
             <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest italic">* แสดงเฉพาะบิลที่อนุมัติแล้ว</p>
         </div>
 

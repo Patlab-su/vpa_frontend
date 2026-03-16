@@ -19,6 +19,28 @@ export default function SiteProgressEdit() {
   const [uploading, setUploading] = useState(false);
   const [preview, setPreview] = useState("");
 
+  // --- 🌟 ส่วนที่เพิ่ม: ดึงข้อมูลปัจจุบันมาค้างไว้ในฟอร์ม ---
+  useEffect(() => {
+    async function loadCurrentProgress() {
+      try {
+        const res = await axios.get(`/api/sites/${id}/progress`);
+        const data = res.data?.data;
+        if (data) {
+          setForm({
+            overall: data.overall ?? "",
+            structure: data.structure ?? "",
+            electrical: data.electrical ?? "",
+            plumbing: data.plumbing ?? "",
+            image_url: data.image_url ?? "",
+          });
+        }
+      } catch (err) {
+        console.error("Error fetching current progress:", err);
+      }
+    }
+    loadCurrentProgress();
+  }, [id]);
+
   const numberOrEmpty = (v) => {
     const n = Number(v);
     return Number.isFinite(n) ? n : "";
@@ -29,12 +51,14 @@ export default function SiteProgressEdit() {
     const s = Number(form.structure || 0);
     const e = Number(form.electrical || 0);
     const p = Number(form.plumbing || 0);
+    
+    // ตรวจสอบว่ามีการกรอกค่าใดค่าหนึ่งหรือไม่
     const hasAny = [form.structure, form.electrical, form.plumbing].some(
       (x) => x !== "" && x !== null && x !== undefined
     );
+    
     const avg = hasAny ? Math.round((s + e + p) / 3) : "";
     setForm((prev) => ({ ...prev, overall: avg }));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form.structure, form.electrical, form.plumbing]);
 
   const handleChange = (e) => {
@@ -61,7 +85,7 @@ export default function SiteProgressEdit() {
       const res = await axios.post("/api/upload/site-image", fd, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      if (res.data?.url) return res.data.url; // ✅ ใช้ url แทน filename
+      if (res.data?.url) return res.data.url; 
       return null;
     } catch (err) {
       console.error("Upload error", err);
@@ -87,7 +111,7 @@ export default function SiteProgressEdit() {
         structure: numberOrEmpty(form.structure),
         electrical: numberOrEmpty(form.electrical),
         plumbing: numberOrEmpty(form.plumbing),
-        image_url: uploadedUrl || null, // ✅ เก็บ url เต็ม เช่น /uploads/sites/xxx.webp
+        image_url: uploadedUrl || null,
       });
 
       navigate(`/sites/${id}`);
@@ -104,119 +128,102 @@ export default function SiteProgressEdit() {
           onClick={() => navigate(-1)}
           className="inline-flex items-center gap-2 px-3 py-2 rounded-full hover:bg-gray-100 active:bg-gray-200 transition"
         >
-          <ChevronLeft className="w-6 h-6 stroke-[3]" />
+          <ChevronLeft className="w-6 h-6 stroke-[3] text-blue-600" />
           <span className="text-lg font-medium text-blue-600">Back</span>
         </button>
       </div>
 
-      <div className="mx-auto max-w-md md:max-w-2xl px-4">
+      <div className="mx-auto max-w-md md:max-w-2xl px-4 text-left">
         <h1 className="text-2xl font-extrabold mt-2">อัปเดทความคืบหน้า</h1>
 
         <form onSubmit={handleSubmit} className="mt-4 space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm text-gray-600 mb-1">
-                งานโครงสร้าง (%)
-              </label>
+              <label className="block text-sm text-gray-600 mb-1">งานโครงสร้าง (%)</label>
               <input
                 type="number"
                 name="structure"
                 value={form.structure}
                 onChange={handleChange}
                 placeholder="0 - 100"
-                className="border rounded-xl p-2 w-full"
+                className="border rounded-xl p-3 w-full focus:ring-2 focus:ring-blue-500 outline-none"
                 min={0}
                 max={100}
               />
             </div>
             <div>
-              <label className="block text-sm text-gray-600 mb-1">
-                งานระบบไฟ (%)
-              </label>
+              <label className="block text-sm text-gray-600 mb-1">งานระบบไฟ (%)</label>
               <input
                 type="number"
                 name="electrical"
                 value={form.electrical}
                 onChange={handleChange}
                 placeholder="0 - 100"
-                className="border rounded-xl p-2 w-full"
+                className="border rounded-xl p-3 w-full focus:ring-2 focus:ring-blue-500 outline-none"
                 min={0}
                 max={100}
               />
             </div>
             <div>
-              <label className="block text-sm text-gray-600 mb-1">
-                งานระบบน้ำ (%)
-              </label>
+              <label className="block text-sm text-gray-600 mb-1">งานระบบน้ำ (%)</label>
               <input
                 type="number"
                 name="plumbing"
                 value={form.plumbing}
                 onChange={handleChange}
                 placeholder="0 - 100"
-                className="border rounded-xl p-2 w-full"
+                className="border rounded-xl p-3 w-full focus:ring-2 focus:ring-blue-500 outline-none"
                 min={0}
                 max={100}
               />
             </div>
             <div>
-              <label className="block text-sm text-gray-600 mb-1">
-                เปอร์เซ็นรวม (คำนวณอัตโนมัติ)
-              </label>
+              <label className="block text-sm text-gray-600 mb-1">เปอร์เซ็นรวม (คำนวณอัตโนมัติ)</label>
               <input
                 type="number"
                 name="overall"
                 value={form.overall}
                 readOnly
-                className="border rounded-xl p-2 w-full bg-gray-50"
+                className="border rounded-xl p-3 w-full bg-gray-50 font-bold text-blue-600"
               />
             </div>
           </div>
 
-          {/* Upload */}
-          <div className="rounded-xl border p-4">
-            <label className="block text-sm text-gray-600 mb-2">
-              อัปโหลดภาพปกล่าสุดของไซต์
-            </label>
+          {/* Upload Section */}
+          <div className="rounded-2xl border-2 border-dashed p-6 bg-gray-50/50">
+            <label className="block text-sm font-semibold text-gray-700 mb-2">อัปโหลดภาพปกล่าสุดของไซต์</label>
             <div className="flex items-center gap-3">
-              <label className="inline-flex items-center gap-2 px-3 py-2 rounded-full border cursor-pointer hover:bg-gray-50">
-                <Upload className="w-4 h-4" />
-                เลือกรูปภาพ
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  onChange={handleImageChange}
-                />
+              <label className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white border shadow-sm cursor-pointer hover:bg-gray-50 transition">
+                <Upload className="w-4 h-4 text-blue-600" />
+                <span className="text-sm font-medium">เลือกรูปภาพ</span>
+                <input type="file" accept="image/*" className="hidden" onChange={handleImageChange} />
               </label>
-              {uploading && (
-                <span className="text-blue-600 text-sm">กำลังอัปโหลด...</span>
-              )}
+              {uploading && <span className="text-blue-600 text-sm animate-pulse">กำลังอัปโหลด...</span>}
             </div>
-            {preview ? (
-              <img
-                src={preview}
-                alt="preview"
-                className="mt-3 w-full h-48 object-cover rounded-lg"
-              />
-            ) : form.image_url ? (
-              <div className="mt-3 flex items-center gap-2 text-gray-600">
-                <ImageIcon className="w-4 h-4" /> {form.image_url}
+            
+            {(preview || form.image_url) && (
+              <div className="mt-4 relative rounded-xl overflow-hidden border bg-white">
+                <img
+                  src={preview || (form.image_url.startsWith('http') ? form.image_url : `${import.meta.env.VITE_API_BASE}${form.image_url}`)}
+                  alt="preview"
+                  className="w-full h-48 object-cover"
+                />
               </div>
-            ) : null}
+            )}
           </div>
 
-          <div className="flex gap-3">
+          <div className="flex gap-3 pt-4">
             <button
               type="submit"
-              className="px-5 py-2.5 rounded-full bg-green-500 text-white hover:bg-green-600"
+              disabled={uploading}
+              className="flex-1 py-3 rounded-2xl bg-blue-600 text-white font-bold hover:bg-blue-700 active:scale-95 transition-all disabled:bg-gray-400"
             >
-              บันทึก
+              {uploading ? "กำลังบันทึก..." : "บันทึกข้อมูล"}
             </button>
             <button
               type="button"
               onClick={() => navigate(-1)}
-              className="px-5 py-2.5 rounded-full border hover:bg-gray-50"
+              className="px-8 py-3 rounded-2xl border font-bold text-gray-600 hover:bg-gray-50 active:scale-95 transition-all"
             >
               ยกเลิก
             </button>

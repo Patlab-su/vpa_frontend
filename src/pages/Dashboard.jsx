@@ -60,7 +60,7 @@ const Dashboard = () => {
   ) || [];
 
   return (
-    <div className="min-h-screen bg-white pb-32 font-sans">
+    <div className="min-h-screen bg-white pb-40 font-sans">
       {/* --- Header --- */}
       <div className="sticky top-0 z-10 bg-white/90 backdrop-blur-sm border-b border-gray-100">
         <div className="mx-auto max-w-screen-sm px-5 py-4 flex items-center gap-3">

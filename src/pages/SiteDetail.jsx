@@ -111,7 +111,7 @@ export default function SiteDetail() {
   const isOverBudget = remainingBudget < 0;
 
   return (
-    <div className="min-h-screen bg-white pb-24">
+    <div className="min-h-screen bg-white pb-40">
       {/* Top bar */}
       <div className="mx-auto max-w-md md:max-w-2xl px-4 pt-4">
         <div className="flex items-center gap-3">

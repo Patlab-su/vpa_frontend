@@ -1,9 +1,12 @@
+// src/pages/ExpenseDetail.jsx
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "../services/api";
-import { ChevronLeft, Filter, Tag, LayoutGrid, CheckCircle2, XCircle, Clock, Search } from "lucide-react";
+import { ChevronLeft, Filter, Tag, LayoutGrid, CheckCircle2, XCircle, Clock, Search, ImageIcon, X } from "lucide-react";
 import ExpenseTimeline from "../components/ExpenseTimeline";
 import BottomNav from "../components/BottomNav";
+
+const API = import.meta.env.VITE_API_BASE;
 
 const TYPE_LABEL = {
   all: "ทุกประเภท",
@@ -24,15 +27,32 @@ export default function ExpenseDetail() {
   // States สำหรับ Filter และ Search
   const [statusFilter, setStatusFilter] = useState("all");
   const [typeFilter, setTypeFilter] = useState("all");
-  const [searchTerm, setSearchTerm] = useState(""); // ✅ เพิ่ม State ค้นหา
+  const [searchTerm, setSearchTerm] = useState("");
+  
+  // State สำหรับพรีวิวรูปใบเสร็จ
+  const [previewImage, setPreviewImage] = useState(null);
 
+  // ✅ แก้ไขส่วน useEffect เพื่อดึงข้อมูล "รอตรวจ" (Pending)
   useEffect(() => {
     const fetchExpenses = async () => {
       try {
         setLoading(true);
-        const res = await axios.get(`/api/expenses`, {
-          params: siteId && siteId !== "all" ? { site_id: siteId } : {},
-        });
+        
+        // 1. กำหนดพารามิเตอร์เริ่มต้น
+        const params = {};
+        
+        // 2. กรองตาม Site (ถ้ามี)
+        if (siteId && siteId !== "all") {
+          params.site_id = siteId;
+        }
+
+        // 3. 🌟 จุดสำคัญ: กรองตามสถานะที่ผู้ใช้เลือก (รวมถึง Pending)
+        if (statusFilter !== "all") {
+          params.status = statusFilter;
+        }
+
+        // ยิง API พร้อมพารามิเตอร์ status
+        const res = await axios.get(`/api/expenses`, { params });
         setExpenses(res.data.data || []);
       } catch (err) {
         console.error("Error fetching expenses", err);
@@ -40,12 +60,13 @@ export default function ExpenseDetail() {
         setLoading(false);
       }
     };
-    fetchExpenses();
-  }, [siteId]);
 
-  // ✅ Logic กรองข้อมูล (รวม Search)
+    fetchExpenses();
+    // 4. เพิ่ม statusFilter เข้าไปเพื่อให้ระบบดึงข้อมูลใหม่ทุกครั้งที่เปลี่ยนแท็บ
+  }, [siteId, statusFilter]); 
+
+  // Logic กรองข้อมูลฝั่ง Client (สำหรับการค้นหา)
   const filteredExpenses = expenses.filter((exp) => {
-    const matchStatus = statusFilter === "all" || exp.status === statusFilter;
     const matchType = typeFilter === "all" || exp.expense_type === typeFilter;
     
     const lowerSearch = searchTerm.toLowerCase();
@@ -54,12 +75,12 @@ export default function ExpenseDetail() {
       (exp.description && exp.description.toLowerCase().includes(lowerSearch)) ||
       (exp.amount && String(exp.amount).includes(lowerSearch));
 
-    return matchStatus && matchType && matchSearch;
+    return matchType && matchSearch;
   });
 
   return (
     <div className="min-h-screen bg-gray-50 pb-32">
-      {/* Header เดิมของคุณ */}
+      {/* Header Section */}
       <div className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-gray-100">
         <div className="max-w-screen-sm mx-auto h-16 flex items-center px-4 relative">
           <button
@@ -74,7 +95,7 @@ export default function ExpenseDetail() {
           </h1>
         </div>
 
-        {/* ✅ Search Bar (แทรกเข้ามาให้เนียนกับดีไซน์เดิม) */}
+        {/* Search Bar */}
         <div className="max-w-screen-sm mx-auto px-4 pb-2">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
@@ -88,13 +109,13 @@ export default function ExpenseDetail() {
           </div>
         </div>
 
-        {/* Filter Row 1: Status Tabs (ดั้งเดิม) */}
+        {/* Status Filter Tabs */}
         <div className="max-w-screen-sm mx-auto px-4 py-3 flex gap-2 overflow-x-auto no-scrollbar border-t border-gray-50">
           {[
             { id: "all", label: "ทั้งหมด", icon: <LayoutGrid className="w-3 h-3"/> },
             { id: "Approved", label: "อนุมัติ", icon: <CheckCircle2 className="w-3 h-3"/> },
             { id: "Rejected", label: "ไม่อนุมัติ", icon: <XCircle className="w-3 h-3"/> },
-            { id: "Pending", label: "รอตรวจ", icon: <Clock className="w-3 h-3"/> }
+            
           ].map((tab) => (
             <button
               key={tab.id}
@@ -110,7 +131,7 @@ export default function ExpenseDetail() {
           ))}
         </div>
 
-        {/* Filter Row 2: Type Dropdown (ดั้งเดิม) */}
+        {/* Category Filter */}
         <div className="max-w-screen-sm mx-auto px-4 pb-3 flex items-center gap-2">
             <div className="relative flex-1">
                 <Tag className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
@@ -143,10 +164,9 @@ export default function ExpenseDetail() {
           filteredExpenses.map((exp) => (
             <div
               key={exp.expense_id}
-              className="bg-white rounded-[2rem] border border-gray-50 shadow-[0_10px_30px_-15px_rgba(0,0,0,0.05)] overflow-hidden transition-all active:scale-[0.98]"
+              className="bg-white rounded-[2rem] border border-gray-50 shadow-[0_10px_30px_-15px_rgba(0,0,0,0.05)] overflow-hidden"
             >
               <div className="p-5 space-y-4">
-                {/* Top Info */}
                 <div className="flex justify-between items-start">
                   <div className="space-y-1">
                     <span className="text-[10px] font-black uppercase text-blue-500 bg-blue-50 px-2 py-0.5 rounded-md tracking-wider">
@@ -157,17 +177,16 @@ export default function ExpenseDetail() {
                     </h3>
                   </div>
                   <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[10px] font-black uppercase ${
-                    exp.status === 'Approved' ? 'bg-green-50 text-green-600' :
-                    exp.status === 'Rejected' ? 'bg-red-50 text-red-600' : 'bg-orange-50 text-orange-600'
+                    exp.status?.toLowerCase() === 'approved' ? 'bg-green-50 text-green-600' :
+                    exp.status?.toLowerCase() === 'rejected' ? 'bg-red-50 text-red-600' : 'bg-orange-50 text-orange-600'
                   }`}>
-                    {exp.status === 'Approved' && <CheckCircle2 className="w-3 h-3" />}
-                    {exp.status === 'Rejected' && <XCircle className="w-3 h-3" />}
-                    {exp.status === 'Pending' && <Clock className="w-3 h-3" />}
+                    {exp.status?.toLowerCase() === 'approved' && <CheckCircle2 className="w-3 h-3" />}
+                    {exp.status?.toLowerCase() === 'rejected' && <XCircle className="w-3 h-3" />}
+                    {exp.status?.toLowerCase() === 'pending' && <Clock className="w-3 h-3" />}
                     {exp.status}
                   </div>
                 </div>
 
-                {/* Details Grid (ดั้งเดิม) */}
                 <div className="grid grid-cols-2 gap-4 bg-gray-50 p-4 rounded-2xl border border-gray-100/50">
                     <div className="space-y-0.5">
                         <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest">ไซต์งาน</p>
@@ -184,17 +203,18 @@ export default function ExpenseDetail() {
                         <p className="text-xs font-bold text-gray-700 truncate">{exp.requested_by_name || "-"}</p>
                     </div>
                     <div className="space-y-0.5">
-                        <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest">ผู้อนุมัติ</p>
+                        {/* เปลี่ยนจาก ผู้อนุมัติ เป็น ผู้ตรวจสอบ */}
+                        <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest">ผู้ตรวจสอบ</p>
                         <p className="text-xs font-bold text-gray-700 truncate">{exp.approved_by_name || "-"}</p>
                     </div>
                 </div>
 
+                {/* ส่วนของหมายเหตุปกติ */}
                 {exp.description && (
                   <div className="flex gap-2 items-start px-1">
                     <div className="w-1 h-8 bg-blue-100 rounded-full" />
                     <p className="text-xs text-gray-500 leading-relaxed font-medium">
                       <span className="font-black text-gray-400 uppercase text-[9px] block">หมายเหตุ:</span>
-                      {/* ✅ แสดง Highlight เฉพาะคำที่ค้นหา */}
                       {searchTerm ? (
                         <span>
                             {exp.description.split(new RegExp(`(${searchTerm})`, 'gi')).map((part, i) => 
@@ -210,9 +230,32 @@ export default function ExpenseDetail() {
                   </div>
                 )}
 
-                {/* ✅ Timeline Modern Style (ดั้งเดิม 100%) */}
+                
+                {exp.status?.toLowerCase() === 'rejected' && exp.rejection_reason && (
+                  <div className="flex gap-2 items-start px-1 mt-2 p-3 bg-red-50/50 rounded-xl border border-red-100">
+                    <div className="w-1 h-8 bg-red-400 rounded-full" />
+                    <p className="text-xs text-red-600 leading-relaxed font-medium">
+                      <span className="font-black text-red-400 uppercase text-[9px] block">เหตุผลที่ไม่อนุมัติ:</span>
+                      {exp.rejection_reason}
+                    </p>
+                  </div>
+                )}
+
+                {/* ปุ่มพรีวิวใบเสร็จ */}
+                {exp.receipt_image && (
+                  <div className="pt-3">
+                    <button
+                      onClick={() => setPreviewImage(`${API}${exp.receipt_image}`)}
+                      className="w-full inline-flex items-center justify-center gap-2 py-3 rounded-xl bg-gray-50 border border-gray-100 text-[10px] font-black uppercase text-blue-600 hover:bg-blue-50 transition-all"
+                    >
+                      <ImageIcon className="w-3.5 h-3.5" />
+                      ตรวจสอบใบเสร็จ / รูปภาพ
+                    </button>
+                  </div>
+                )}
+
                 <div className="pt-2 border-t border-gray-50">
-                    <button className="w-full text-[10px] font-black text-blue-600 uppercase tracking-widest py-2 bg-blue-50/50 rounded-xl hover:bg-blue-50">
+                    <button className="w-full text-[10px] font-black text-blue-600 uppercase tracking-widest py-2 bg-blue-50/50 rounded-xl">
                         แสดงประวัติการดำเนินการ (Logs)
                     </button>
                     <div className="mt-4 px-2">
@@ -225,7 +268,23 @@ export default function ExpenseDetail() {
         )}
       </div>
 
-      <BottomNav />
-    </div>
+      {/* Image Preview Modal */}
+      {previewImage && (
+        <div
+          className="fixed inset-0 bg-black/90 z-[100] flex items-center justify-center p-4 backdrop-blur-sm"
+          onClick={() => setPreviewImage(null)}
+        >
+          <img
+            src={previewImage}
+            alt="preview"
+            className="max-h-full max-w-full rounded-2xl shadow-2xl object-contain animate-in zoom-in-95 duration-200"
+          />
+          <button className="absolute top-6 right-6 p-3 bg-white/10 text-white rounded-full hover:bg-white/20">
+             <X className="w-6 h-6" />
+          </button>
+        </div>
+      )}
+
+      <BottomNav />    </div>
   );
 }
