@@ -212,11 +212,28 @@ const ExpenseSummary = () => {
                     </PieChart>
                 </ResponsiveContainer>
             )}
-            {/* Total Center Overlay */}
+          {/* Total Center Overlay */}
             {!loading && total > 0 && (
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center pointer-events-none">
                     <p className="text-[10px] font-black text-gray-400 uppercase tracking-tighter">รวมทั้งสิ้น</p>
-                    <p className="text-xl font-black text-blue-900 leading-none">{(total/1000).toFixed(1)}k</p>
+                    <p className="text-xl font-black text-blue-900 leading-none">
+                        {(() => {
+                            if (total >= 1000000) {
+                                // ถ้าตั้งแต่ 1 ล้านขึ้นไป แสดงเป็น M (เช่น 1.5M, 10.2M)
+                                const num = total / 1000000;
+                                const formatted = num.toFixed(1);
+                                return formatted.replace('.0', '') + 'M';
+                            } else if (total >= 1000) {
+                                // ถ้าตั้งแต่ 1 พันถึง 9 แสน แสดงเป็น k (เช่น 800k, 15.5k)
+                                const num = total / 1000;
+                                const formatted = num.toFixed(1);
+                                return formatted.replace('.0', '') + 'k';
+                            } else {
+                                // ถ้าน้อยกว่า 1 พัน ให้แสดงตัวเลขปกติ
+                                return total.toString();
+                            }
+                        })()}
+                    </p>
                 </div>
             )}
         </div>

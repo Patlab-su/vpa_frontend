@@ -18,6 +18,16 @@ const TYPE_LABEL = {
   Other: "อื่นๆ",
 };
 
+const statusLabel = (status) => {
+  if (!status) return '';
+  switch(status.toLowerCase()) {
+    case 'approved': return 'อนุมัติ';
+    case 'rejected': return 'ไม่อนุมัติ';
+    case 'pending': return 'รอการอนุมัติ';
+    default: return status;
+  }
+};
+
 export default function ExpenseDetail() {
   const { siteId } = useParams();
   const navigate = useNavigate();
@@ -88,7 +98,7 @@ export default function ExpenseDetail() {
             className="flex items-center gap-1 text-blue-600 font-bold hover:bg-blue-50 px-2 py-1 rounded-xl transition"
           >
             <ChevronLeft className="w-6 h-6 stroke-[2.5]" />
-            <span>Back</span>
+            <span>กลับ</span>
           </button>
           <h1 className="absolute left-1/2 -translate-x-1/2 text-md font-black text-gray-800 whitespace-nowrap uppercase tracking-tight">
             ประวัติรายละเอียดบิล

@@ -78,7 +78,7 @@ const SiteHistory = () => {
                     : "bg-white text-gray-600 border-gray-300 hover:bg-gray-50"
                 }`}
               >
-                {status === "All" ? "ทั้งหมด" : status}
+                {status === "All" ? "ทั้งหมด" : status === "Completed" ? "เสร็จสิ้น" : status === "Cancelled" ? "ยกเลิก" : "ระหว่างดำเนินการ"}
               </button>
             ))}
           </div>
@@ -114,7 +114,7 @@ const SiteHistory = () => {
                             site.status === 'Cancelled' ? 'bg-red-100 text-red-700' :
                             'bg-gray-100 text-gray-600'
                         }`}>
-                            {site.status}
+                            {site.status === 'Completed' ? 'เสร็จสิ้น' : site.status === 'Cancelled' ? 'ยกเลิก' : site.status}
                         </span>
                     </div>
                     <h3 className="font-bold text-gray-800 line-clamp-1 mb-1">{site.site_name}</h3>

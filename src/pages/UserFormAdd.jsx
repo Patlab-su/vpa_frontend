@@ -102,18 +102,18 @@ const UserFormAdd = () => {
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1">
                 <label className="text-xs font-bold text-gray-400 uppercase ml-1">ชื่อจริง</label>
-                <input name="first_name" value={form.first_name} onChange={handleChange} className="w-full bg-gray-50 border-none rounded-2xl px-5 py-3.5 focus:ring-2 focus:ring-orange-100 outline-none font-semibold" placeholder="First Name" />
+                <input name="first_name" value={form.first_name} onChange={handleChange} className="w-full bg-gray-50 border-none rounded-2xl px-5 py-3.5 focus:ring-2 focus:ring-orange-100 outline-none font-semibold" placeholder="ชื่อจริง" />
               </div>
               <div className="space-y-1">
                 <label className="text-xs font-bold text-gray-400 uppercase ml-1">นามสกุล</label>
-                <input name="last_name" value={form.last_name} onChange={handleChange} className="w-full bg-gray-50 border-none rounded-2xl px-5 py-3.5 focus:ring-2 focus:ring-orange-100 outline-none font-semibold" placeholder="Last Name" />
+                <input name="last_name" value={form.last_name} onChange={handleChange} className="w-full bg-gray-50 border-none rounded-2xl px-5 py-3.5 focus:ring-2 focus:ring-orange-100 outline-none font-semibold" placeholder="นามสกุล" />
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1">
                 <label className="text-xs font-bold text-gray-400 uppercase ml-1">ชื่อเล่น</label>
-                <input name="nickname" value={form.nickname} onChange={handleChange} className="w-full bg-gray-50 border-none rounded-2xl px-5 py-3.5 focus:ring-2 focus:ring-orange-100 outline-none font-semibold" placeholder="Nickname" />
+                <input name="nickname" value={form.nickname} onChange={handleChange} className="w-full bg-gray-50 border-none rounded-2xl px-5 py-3.5 focus:ring-2 focus:ring-orange-100 outline-none font-semibold" placeholder="ชื่อเล่น" />
               </div>
               <div className="space-y-1">
                 <label className="text-xs font-bold text-gray-400 uppercase ml-1">เบอร์โทรศัพท์</label>
@@ -139,7 +139,7 @@ const UserFormAdd = () => {
               <label className="relative inline-flex items-center cursor-pointer">
                 <input type="checkbox" name="is_active" checked={form.is_active} onChange={handleChange} className="sr-only peer" />
                 <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
-                <span className="ml-3 text-sm font-bold text-green-600">{form.is_active ? "ACTIVE" : "INACTIVE"}</span>
+                <span className="ml-3 text-sm font-bold text-green-600">{form.is_active ? "ปกติ" : "ไม่ใช้งาน"}</span>
               </label>
             </div>
           </div>

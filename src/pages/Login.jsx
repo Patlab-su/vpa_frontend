@@ -77,10 +77,10 @@ export default function Login() {
             <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-lg">
                <Building2 className="w-8 h-8 text-blue-900" />
             </div>
-            <span className="text-2xl font-bold tracking-wider">Construction Site</span>
+            <span className="text-2xl font-bold tracking-wider">ศูนย์ก่อสร้าง</span>
           </div>
           <h1 className="text-4xl font-bold leading-tight mb-4">
-            Professional Engineering <br/> & Supply Management
+            บริหารงานวิศวกรรมและจัดหาวัสดุ <br/> อย่างมืออาชีพ
           </h1>
           <p className="text-blue-200 max-w-md text-lg">
             ระบบบริหารจัดการโครงการก่อสร้าง คลังสินค้า และงานรับเหมาครบวงจร
@@ -88,7 +88,7 @@ export default function Login() {
         </div>
 
         <div className="relative z-20 text-sm text-blue-300">
-          © 2025 ENGINEERING AND SUPPLY CO., LTD.
+          © 2568 บริษัท วิศวกรรมและจัดหาวัสดุ จำกัด.
         </div>
       </div>
 

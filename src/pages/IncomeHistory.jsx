@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "../services/api";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Search, Calendar as CalendarIcon, DollarSign, Image as ImageIcon } from "lucide-react";
+// เอา DollarSign ออกจากบรรทัด import ด้านล่างนี้นะครับ
+import { ArrowLeft, Search, Calendar as CalendarIcon, Image as ImageIcon } from "lucide-react";
 import BottomNav from "../components/BottomNav";
 import dayjs from "dayjs";
 import "dayjs/locale/th";
@@ -92,9 +93,9 @@ const IncomeHistory = () => {
                     </div>
                   </div>
                   <div className="text-right">
+                    
                     <p className="text-lg font-black text-green-600 flex items-center justify-end gap-1">
-                      <DollarSign className="w-4 h-4" />
-                      {parseFloat(inc.amount).toLocaleString()}
+                      {parseFloat(inc.amount).toLocaleString()} ฿
                     </p>
                   </div>
                 </div>

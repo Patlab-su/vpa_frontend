@@ -183,7 +183,7 @@ export default function Audit() {
       <div className="sticky top-0 z-10 bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/60 border-b">
         <div className="mx-auto max-w-screen-sm px-4 py-4 flex items-center gap-3">
           <UserIcon className="w-6 h-6 text-black" />
-          <h1 className="text-lg font-semibold">Audit logs</h1>
+          <h1 className="text-lg font-semibold">บันทึกการตรวจสอบ</h1>
           <div className="ml-auto flex items-center gap-2">
             <button
               onClick={() => {
@@ -193,7 +193,7 @@ export default function Audit() {
               className="text-sm px-3 py-1 rounded-full border border-gray-200 bg-white hover:bg-gray-50"
               title="ล้างฟิลเตอร์"
             >
-              Reset
+              ล้าง
             </button>
           </div>
         </div>
@@ -223,7 +223,7 @@ export default function Audit() {
                     else setSelectedUsers([]);
                   }}
                 />
-                <span className="text-sm">Select all</span>
+                <span className="text-sm">เลือกทั้งหมด</span>
               </label>
               <div className="max-h-44 overflow-auto">
                 {users.map((u) => (
@@ -261,7 +261,7 @@ export default function Audit() {
                     else setSelectedActions([]);
                   }}
                 />
-                <span className="text-sm">Select all</span>
+                <span className="text-sm">เลือกทั้งหมด</span>
               </label>
               <div className="space-y-2">
                 {actionsList.map((a) => (
@@ -287,11 +287,11 @@ export default function Audit() {
                 setPage(1);
               }}
             >
-              <option value="">Browser</option>
+              <option value="">เบราว์เซอร์</option>
               <option value="chrome">Chrome</option>
               <option value="safari">Safari</option>
               <option value="edge">Edge</option>
-              <option value="mobile">Mobile</option>
+              <option value="mobile">มือถือ</option>
             </select>
           </div>
 
@@ -318,17 +318,17 @@ export default function Audit() {
           <table className="w-full table-auto border-collapse">
             <thead>
               <tr className="text-left text-sm text-gray-500">
-                <th className="py-3 pr-3">User</th>
-                <th className="py-3 pr-3">Action</th>
-                <th className="py-3 pr-3">Date & Time</th>
-                <th className="py-3 pr-3">Subject</th>
+                <th className="py-3 pr-3">ผู้ใช้</th>
+                <th className="py-3 pr-3">การดำเนินการ</th>
+                <th className="py-3 pr-3">วันที่และเวลา</th>
+                <th className="py-3 pr-3">หัวข้อ</th>
               </tr>
             </thead>
             <tbody>
               {loading ? (
-                <tr><td colSpan="4" className="py-6 text-center">Loading...</td></tr>
+                <tr><td colSpan="4" className="py-6 text-center">กำลังโหลด...</td></tr>
               ) : logs.length === 0 ? (
-                <tr><td colSpan="4" className="py-6 text-center text-gray-500">No records</td></tr>
+                <tr><td colSpan="4" className="py-6 text-center text-gray-500">ไม่มีบันทึก</td></tr>
               ) : (
                 logs.map((log) => (
                   <tr key={log.log_id} className="border-t">

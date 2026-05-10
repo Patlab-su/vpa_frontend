@@ -64,7 +64,7 @@ export default function ExpensesReport() {
             className="inline-flex items-center gap-1 text-blue-600 font-bold hover:bg-blue-50 px-2 py-1 rounded-lg transition"
           >
             <ChevronLeft className="w-6 h-6 stroke-[2.5]" />
-            <span>Back</span>
+            <span>กลับ</span>
           </button>
 
           <h1 className="absolute left-1/2 -translate-x-1/2 text-lg font-black text-gray-800 whitespace-nowrap">
